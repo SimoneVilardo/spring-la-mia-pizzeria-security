@@ -1,5 +1,10 @@
 package org.java.spring;
 
+import org.java.spring.auth.conf.AuthConf;
+import org.java.spring.auth.db.pojo.Role;
+import org.java.spring.auth.db.pojo.User;
+import org.java.spring.auth.db.serv.RoleService;
+import org.java.spring.auth.db.serv.UserService;
 import org.java.spring.pojo.Ingrediente;
 import org.java.spring.pojo.Pizza;
 import org.java.spring.serv.IngredienteService;
@@ -9,6 +14,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
+
 @SpringBootApplication
 public class DbPizzeriaApplication implements CommandLineRunner {
 
@@ -17,6 +24,12 @@ public class DbPizzeriaApplication implements CommandLineRunner {
 	
 	@Autowired
 	private IngredienteService ingredienteService;
+	
+	@Autowired
+	private RoleService roleService;
+	
+	@Autowired
+	private UserService userService;
 	
 	
 	public static void main(String[] args) {
@@ -56,7 +69,19 @@ public class DbPizzeriaApplication implements CommandLineRunner {
 		pizzaService.save(new Pizza("Capricciosa", "Carciofi, prosciutto, funghi e olive rendono questa pizza saporita.", "https://i0.wp.com/www.pizzeriagirasole.net/wp-content/uploads/2021/02/WhatsApp-Image-2021-02-10-at-12.40.27.jpeg?fit=1188%2C1135&ssl=1", 13.1, ing6, ing10, ing1));
 		pizzaService.save(new Pizza("Marinara", "Pizza semplice con pomodoro, aglio, origano e olio d'oliva.", "https://it.ooni.com/cdn/shop/articles/marinara-for-web.jpg?crop=center&height=800&v=1635275961&width=800", 8.2, ing2, ing4, ing6, ing8, ing9));
 		pizzaService.save(new Pizza("Napoletana", "Pizza napoletana tradizionale con pomodoro, mozzarella e basilico.", "https://www.saporinostri.it/wp-content/uploads/2020/10/le-origini-della-pizza-napoletana-e1601990439881.jpg", 9.4, ing8, ing9, ing3));
-
+		
+		
+		Role roleUser = new Role("USER");
+		Role roleAdmin = new Role("ADMIN");
+		        
+		roleService.save(roleUser);
+		roleService.save(roleAdmin);
+		
+		String psw = AuthConf.passwordEncoder().encode("password");
+		        
+		userService.save(new User("utente-1", psw, roleUser));
+		userService.save(new User("utente-2", psw, roleAdmin));
+		
 		
 	}
 
